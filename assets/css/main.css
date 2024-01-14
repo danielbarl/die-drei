@@ -115,7 +115,7 @@ footer {
 	footer {
 		position: fixed;
  /* Keep the footer fixed at the bottom */
-		bottom: 2rem;
+		bottom: 1rem;
  /* Maintain a minimum space of 2rem under the last item */
 		left: 0;
 		right: 0;
