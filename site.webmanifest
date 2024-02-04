@@ -1,7 +1,7 @@
 {
   "name": "???",
   "short_name": "???",
-  "start_url": "/"
+  "start_url": "/",
   "icons": [
     {
       "src": "assets/favicon/android-chrome-192x192.png",
