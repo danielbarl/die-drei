@@ -13,6 +13,10 @@
 	text-rendering: optimizeLegibility;
 }
 
+html {
+	height: 100%;
+}
+
 @font-face {
 	font-family: 'HelveticaNeueLTStd-BdCn';
 	src: url('../fonts/HelveticaNeueLTStd-BdCn.woff2') format('woff2'),
@@ -33,10 +37,9 @@ body {
 	color: var(--clr-white);
 	font-size: var(--font-size);
 	text-align: center;
-	margin: 0;
- /* Reset default margin */
-	padding-bottom: 2em;
- /* Space for the footer */;
+	min-height: 100%;
+	display: grid;
+	grid-template-rows: 1fr auto;
 }
 
 .container {
@@ -87,18 +90,12 @@ p {
 footer {
 	font-family: RobotoCondensed, Arial, sans-serif;
 	font-size: 0.5em;
-	position: absolute;
- /* Change from fixed to absolute */
-	bottom: 0;
-	left: 0;
- /* Align to the left edge of the container */
-	right: 0;
- /* Align to the right edge of the container */
+	grid-row-start: 2;
+	grid-row-end: 3;
 	max-width: 100%;
 	background-color: var(--clr-background);
 	color: var(--clr-white);
 	padding: 1em;
- /* Add padding to the footer */;
 }
 
         /* Media Query for Mobile Devices */
