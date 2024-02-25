@@ -68,6 +68,10 @@ h1 {
  /* Remove default margin for p inside episodeInfo */;
 }
 
+#episodeImage {
+	
+}
+
 a {
 	color: var(--clr-white);
 	text-decoration: underline;
