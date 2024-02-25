@@ -32,14 +32,18 @@ async function generateNumber() {
         const episodeContent = document.getElementById('episodeContent');
         episodeContent.textContent = `Episode ${randomEpisodeNumber}: ${title} (${releaseYear})`;
 
-        // Optionally, you can use the imagePath to display an image
         const episodeImage = document.getElementById('episodeImage');
         episodeImage.src = imagePath;
 
-        // Update the Spotify link array
-        const spotifyLinks = [link];
+        const episodeLink = document.getElementById('episodeLink');
+        episodeLink.href = link;
 
-        // ... rest of your code
+        const refreshButton = document.getElementById('refreshButton');
+        refreshButton.addEventListener('click', function () {
+            location.reload(); // Reload the page on button click
+        });
+
+        // ... (your existing code)
     } else {
         const episodeContent = document.getElementById('episodeContent');
         episodeContent.textContent = 'Episode information not found. Please try again.';
