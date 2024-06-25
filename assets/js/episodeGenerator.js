@@ -10,7 +10,7 @@ async function fetchEpisodesData() {
     }
 }
 
-// Updated function to generate random episode
+// Function to generate random episode
 async function generateNumber() {
     const episodesData = await fetchEpisodesData();
 
@@ -43,7 +43,6 @@ async function generateNumber() {
             location.reload(); // Reload the page on button click
         });
 
-        // ... (your existing code)
     } else {
         const episodeContent = document.getElementById('episodeContent');
         episodeContent.textContent = 'Episode information not found. Please try again.';
