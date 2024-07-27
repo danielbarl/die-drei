@@ -234,33 +234,55 @@ const urlsToCache = [
     '/die-drei/assets/images/image_224.webp',
     '/die-drei/assets/images/image_225.webp',
     '/die-drei/assets/images/image_226.webp',
-    // '/die-drei/assets/images/image_227.webp',
-    // '/die-drei/assets/images/image_228.webp',
+    '/die-drei/assets/images/image_227.webp',
+    '/die-drei/assets/images/image_228.webp',
+    '/die-drei/assets/images/image_229.webp',
     // Update this list with every new image
 ];
 
+// Install event - caching resources
 self.addEventListener('install', event => {
+    console.log('[Service Worker] Install');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
+                console.log('[Service Worker] Caching all: app shell and content');
                 return cache.addAll(urlsToCache);
             })
     );
 });
 
+// Fetch event - serving cached resources when offline
 self.addEventListener('fetch', event => {
+    console.log(`[Service Worker] Fetched resource: ${event.request.url}`);
     event.respondWith(
         caches.match(event.request)
             .then(response => {
                 if (response) {
                     return response;
                 }
-                return fetch(event.request);
+                return fetch(event.request)
+                    .then(response => {
+                        // Optionally cache the new resource
+                        return caches.open(CACHE_NAME)
+                            .then(cache => {
+                                cache.put(event.request, response.clone());
+                                return response;
+                            });
+                    })
+                    .catch(() => {
+                        // Provide a fallback response if network and cache both fail
+                        if (event.request.mode === 'navigate') {
+                            return caches.match('/die-drei/index.html');
+                        }
+                    });
             })
     );
 });
 
+// Activate event - cleaning up old caches
 self.addEventListener('activate', event => {
+    console.log('[Service Worker] Activate');
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then(keyList => {

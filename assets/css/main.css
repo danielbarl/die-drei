@@ -95,7 +95,7 @@ p {
     transition: background-color 0.3s;
 }
 
-.refresh-button:hover {
+.refresh-button:hover, .refresh-button:active {
     background-color: var(--clr-red);
 }
 
@@ -107,7 +107,7 @@ p {
 
 footer {
     font-family: RobotoCondensed, Arial, sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     max-width: 100%;
     background-color: var(--clr-background);
     color: var(--clr-white);
@@ -148,6 +148,8 @@ footer {
     .refresh-button {
         font-size: 1rem;
         padding: 0.5em;
+        padding-left:1em;
+        padding-right: 1em;
     }
 
     .refresh-button img {
