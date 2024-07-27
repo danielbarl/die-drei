@@ -38,18 +38,13 @@ async function generateNumber() {
         const episodeLink = document.getElementById('episodeLink');
         episodeLink.href = link;
 
-        const refreshButton = document.getElementById('refreshButton');
-        refreshButton.addEventListener('click', function () {
-            location.reload(); // Reload the page on button click
-        });
-
     } else {
         const episodeContent = document.getElementById('episodeContent');
         episodeContent.textContent = 'Episode information not found. Please try again.';
     }
 }
 
-// Call the function when the page loads
-window.onload = function () {
+// Call the function when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
     generateNumber();
-};
+});
