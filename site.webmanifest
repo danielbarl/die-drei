@@ -2,7 +2,7 @@
     "name": "Die Drei ??? Zufallsgenerator",
     "short_name": "Die Drei ???",
     "start_url": "/die-drei/",
-    "display": "minimal-ui",
+    "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#e91b24",
     "icons": [
