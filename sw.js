@@ -1,6 +1,6 @@
-const CACHE_NAME = 'die-drei-cache-v2'; // Increment version to force cache refresh
-const STATIC_CACHE = 'die-drei-static-v2';
-const DYNAMIC_CACHE = 'die-drei-dynamic-v2';
+const CACHE_NAME = 'die-drei-cache-v3'; // Increment version to force cache refresh
+const STATIC_CACHE = 'die-drei-static-v3';
+const DYNAMIC_CACHE = 'die-drei-dynamic-v3';
 
 // Files that should use network-first strategy (always check for updates)
 const NETWORK_FIRST_URLS = [
@@ -8,12 +8,12 @@ const NETWORK_FIRST_URLS = [
     '/die-drei/assets/css/main.css',
     '/die-drei/assets/js/episodeGenerator.js',
     '/die-drei/index.html',
+    '/die-drei/site.webmanifest',
     '/die-drei/'
 ];
 
 // Static assets that can be cached long-term
 const STATIC_ASSETS = [
-    '/die-drei/site.webmanifest',
     '/die-drei/favicon.ico'
 ];
 
