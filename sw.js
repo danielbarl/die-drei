@@ -246,7 +246,13 @@ const IMAGE_ASSETS = [
     '/die-drei/assets/images/image_226.webp',
     '/die-drei/assets/images/image_227.webp',
     '/die-drei/assets/images/image_228.webp',
-    '/die-drei/assets/images/image_229.webp'
+    '/die-drei/assets/images/image_229.webp',
+    '/die-drei/assets/images/image_230.webp',
+    '/die-drei/assets/images/image_231.webp',
+    '/die-drei/assets/images/image_232.webp',
+    '/die-drei/assets/images/image_233.webp',
+    '/die-drei/assets/images/image_234.webp'
+
 ];
 
 // Install event - cache static assets only
