@@ -1,14 +1,24 @@
-const CACHE_NAME = 'die-drei-cache-v1';
-const urlsToCache = [
-    '/die-drei/',
-    '/die-drei/index.html',
-    '/die-drei/site.webmanifest',
-    '/die-drei/favicon.ico',
-    '/die-drei/assets/css/main.css',
-    '/die-drei/assets/css/normalize.css',
-    '/die-drei/assets/js/episodeGenerator.js',
+const CACHE_NAME = 'die-drei-cache-v2'; // Increment version to force cache refresh
+const STATIC_CACHE = 'die-drei-static-v2';
+const DYNAMIC_CACHE = 'die-drei-dynamic-v2';
+
+// Files that should use network-first strategy (always check for updates)
+const NETWORK_FIRST_URLS = [
     '/die-drei/assets/js/episodes.json',
-    // Bilder
+    '/die-drei/assets/css/main.css',
+    '/die-drei/assets/js/episodeGenerator.js',
+    '/die-drei/index.html',
+    '/die-drei/'
+];
+
+// Static assets that can be cached long-term
+const STATIC_ASSETS = [
+    '/die-drei/site.webmanifest',
+    '/die-drei/favicon.ico'
+];
+
+// All image files
+const IMAGE_ASSETS = [
     '/die-drei/assets/images/image_001.webp',
     '/die-drei/assets/images/image_002.webp',
     '/die-drei/assets/images/image_003.webp',
@@ -236,61 +246,112 @@ const urlsToCache = [
     '/die-drei/assets/images/image_226.webp',
     '/die-drei/assets/images/image_227.webp',
     '/die-drei/assets/images/image_228.webp',
-    '/die-drei/assets/images/image_229.webp',
-    // Update this list with every new image
+    '/die-drei/assets/images/image_229.webp'
 ];
 
-// Install event - caching resources
+// Install event - cache static assets only
 self.addEventListener('install', event => {
     console.log('[Service Worker] Install');
+    self.skipWaiting(); // Force activation of new service worker
     event.waitUntil(
-        caches.open(CACHE_NAME)
+        caches.open(STATIC_CACHE)
             .then(cache => {
-                console.log('[Service Worker] Caching all: app shell and content');
-                return cache.addAll(urlsToCache);
+                console.log('[Service Worker] Caching static assets');
+                return cache.addAll(STATIC_ASSETS.concat(IMAGE_ASSETS));
             })
     );
 });
 
-// Fetch event - serving cached resources when offline
-self.addEventListener('fetch', event => {
-    console.log(`[Service Worker] Fetched resource: ${event.request.url}`);
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request)
-                    .then(response => {
-                        // Optionally cache the new resource
-                        return caches.open(CACHE_NAME)
-                            .then(cache => {
-                                cache.put(event.request, response.clone());
-                                return response;
-                            });
-                    })
-                    .catch(() => {
-                        // Provide a fallback response if network and cache both fail
-                        if (event.request.mode === 'navigate') {
-                            return caches.match('/die-drei/index.html');
-                        }
-                    });
-            })
-    );
-});
-
-// Activate event - cleaning up old caches
+// Activate event - clean up old caches
 self.addEventListener('activate', event => {
     console.log('[Service Worker] Activate');
-    const cacheWhitelist = [CACHE_NAME];
+    const cacheWhitelist = [STATIC_CACHE, DYNAMIC_CACHE];
     event.waitUntil(
         caches.keys().then(keyList => {
             return Promise.all(keyList.map(key => {
                 if (cacheWhitelist.indexOf(key) === -1) {
+                    console.log('[Service Worker] Deleting old cache:', key);
                     return caches.delete(key);
                 }
             }));
+        }).then(() => {
+            return self.clients.claim(); // Take control of all pages immediately
         })
     );
+});
+
+// Helper function to determine cache strategy
+function shouldUseNetworkFirst(url) {
+    return NETWORK_FIRST_URLS.some(pattern => url.includes(pattern));
+}
+
+// Network first strategy
+function networkFirst(request) {
+    return fetch(request)
+        .then(response => {
+            // If successful, update cache and return response
+            if (response.status === 200) {
+                const responseClone = response.clone();
+                caches.open(DYNAMIC_CACHE)
+                    .then(cache => {
+                        cache.put(request, responseClone);
+                    });
+            }
+            return response;
+        })
+        .catch(() => {
+            // If network fails, try cache
+            return caches.match(request);
+        });
+}
+
+// Cache first strategy for images and static assets
+function cacheFirst(request) {
+    return caches.match(request)
+        .then(response => {
+            if (response) {
+                return response;
+            }
+            // If not in cache, fetch and cache
+            return fetch(request)
+                .then(response => {
+                    if (response.status === 200) {
+                        const responseClone = response.clone();
+                        caches.open(STATIC_CACHE)
+                            .then(cache => {
+                                cache.put(request, responseClone);
+                            });
+                    }
+                    return response;
+                });
+        });
+}
+
+// Fetch event - use different strategies based on resource type
+self.addEventListener('fetch', event => {
+    const url = event.request.url;
+    
+    // Skip non-GET requests
+    if (event.request.method !== 'GET') {
+        return;
+    }
+
+    console.log(`[Service Worker] Fetching: ${url}`);
+
+    if (shouldUseNetworkFirst(url)) {
+        // Network first for critical files
+        console.log(`[Service Worker] Using network-first for: ${url}`);
+        event.respondWith(networkFirst(event.request));
+    } else {
+        // Cache first for images and other static assets
+        console.log(`[Service Worker] Using cache-first for: ${url}`);
+        event.respondWith(cacheFirst(event.request));
+    }
+});
+
+// Listen for messages from the main thread
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
