@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>??? Zufallsgenerator</title>
-    <link rel="preload" href="/die-drei/assets/fonts/HelveticaNeueLTStd-BdCn.woff2" as="font" type="font/woff2"
-        crossorigin="anonymous">
+    <title>???</title>
+    <link rel="preload" href="/die-drei/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     <link rel="manifest" href="/die-drei/site.webmanifest">
     <meta rel="description" content="Zufallsgenerator für Hörpsielfolgen von den drei Fragezeichen">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#b7b7b7">
     <!-- Favicon -->
     <link rel="shortcut icon" href="/die-drei/favicon.ico">
     <link rel="icon" type="image/x-icon" href="/die-drei/favicon.ico">
@@ -17,33 +16,115 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/die-drei/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/die-drei/favicon-16x16.png">
 
-
-    <link rel="stylesheet" type="text/css" href="assets/css/normalize.css">
     <link rel="stylesheet" type="text/css" href="assets/css/main.css">
 </head>
 
 <body>
     <div class="container">
-        <div id="episodeInfo">
-            <a id="episodeLink" href="#" target="_blank" rel="noopener noreferrer">
-                <img id="episodeImage" alt="Episode Image">
-                <p id="episodeContent"></p>
-            </a>
+        <h1 class="title">Die drei ???</h1>
+
+        <div class="card">
+            <div class="card__image" role="img" aria-label="Episode cover">
+                <img id="episodeImage" src="" alt="Episode cover" style="display: none;">
+            </div>
+
+            <div class="card__info" id="episodeNumber">Episode 47</div>
+            <div class="card__subtitle" id="episodeTitle">
+                <p>Die drei ???<br>und der Knochenmann</p>
+            </div>
+            <div class="card__year" id="episodeYear">2023</div>
+
+            <div class="card__actions">
+                <a href="#" class="card__button card__button--web" id="openWebLink">Open in Web</a>
+                <a href="#" class="card__button card__button--app" id="openAppLink">Open in App</a>
+            </div>
         </div>
 
-        <button class="refresh-button" onclick="location.reload();">
-            Neue Folge generieren
-            <img id="refreshIcon" src="assets/reload-icon.svg" alt="Reload Icon">
-        </button>
-
+        <div class="footer">
+            <button class="regenerate-button" type="button" id="regenerateButton">Regenerate</button>
+            <div class="license"><a href="/lizenz.html">Lizenz</a> © 2025 <a
+                    href="https://radicalkindness.studio">Radical
+                    Kindness</a></div>
+        </div>
     </div>
-    <footer>
-        &copy; 2024 <a href="https://monolyt.co" target="_blank">monolyt.co</a> All rights reserved. <br>
-        All rights to the content of this site belong to:<br>
-        Copyright 2024 Sony Music Entertainment Germany GmbH
-    </footer>
-    <script src="assets/js/episodeGenerator.js"></script>
     <script>
+        // Function to fetch JSON data
+        async function fetchEpisodesData() {
+            try {
+                const response = await fetch('assets/js/episodes.json');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching JSON data:', error);
+                return null;
+            }
+        }
+
+        // Function to generate random episode
+        async function generateRandomEpisode() {
+            const episodesData = await fetchEpisodesData();
+
+            if (!episodesData) {
+                console.error('Error loading episode data.');
+                return;
+            }
+
+            const episodeNumbers = Object.keys(episodesData);
+            const randomEpisodeNumber = episodeNumbers[Math.floor(Math.random() * episodeNumbers.length)];
+            const episodeInfo = episodesData[randomEpisodeNumber];
+
+            if (episodeInfo) {
+                updateEpisodeDisplay(randomEpisodeNumber, episodeInfo);
+            } else {
+                const episodeNumber = document.getElementById('episodeNumber');
+                episodeNumber.textContent = 'Episode information not found. Please try again.';
+            }
+        }
+
+        // Function to update the episode display
+        function updateEpisodeDisplay(episodeNumber, episodeInfo) {
+            // Update episode number
+            const episodeNumberElement = document.getElementById('episodeNumber');
+            episodeNumberElement.textContent = `Episode ${episodeNumber}`;
+
+            // Update title with proper formatting
+            const episodeTitleElement = document.getElementById('episodeTitle');
+            episodeTitleElement.innerHTML = `Die drei ???<br>${episodeInfo.title}`;
+
+            // Update year
+            const episodeYearElement = document.getElementById('episodeYear');
+            episodeYearElement.textContent = episodeInfo.year;
+
+            // Update image
+            const episodeImageElement = document.getElementById('episodeImage');
+            if (episodeInfo.image_path) {
+                episodeImageElement.src = episodeInfo.image_path;
+                episodeImageElement.alt = `Die drei ??? ${episodeInfo.title} cover`;
+                episodeImageElement.style.display = 'block';
+            } else {
+                episodeImageElement.style.display = 'none';
+            }
+
+            // Update web link
+            const openWebLink = document.getElementById('openWebLink');
+            openWebLink.href = `https://open.spotify.com/intl-de/${episodeInfo.link}`;
+
+            // Update app link
+            const openAppLink = document.getElementById('openAppLink');
+            openAppLink.href = `spotify:${episodeInfo.link}`;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            // Generate initial episode
+            generateRandomEpisode();
+
+            // Add regenerate button functionality
+            const regenerateButton = document.getElementById('regenerateButton');
+            regenerateButton.addEventListener('click', generateRandomEpisode);
+        });
+
+        // Service Worker registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/die-drei/sw.js')

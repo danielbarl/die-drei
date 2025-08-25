@@ -1,0 +1,208 @@
+/* RESET */
+html {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    font-size: var(--font-size);
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    font-size: var(--font-size)
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* VARIABLES */
+:root {
+    --clr-text: #000000;
+    --clr-background: #b7b7b7;
+    --clr-border: #000000;
+    --font-size: 1.6rem;
+}
+
+/* TYPEFACES */
+@font-face {
+    font-family: 'Geist';
+    src: url('../fonts/Geist.woff2') format('woff2-variable');
+    font-weight: 100 900;
+}
+
+@font-face {
+    font-family: 'GeistMono';
+    src: url('../fonts/GeistMono.woff2') format('woff2-variable');
+    font-weight: 100 900;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Geist', Arial, sans-serif;
+    background: var(--clr-background);
+    color: var(--clr-white);
+    font-size: var(--font-size);
+    text-align: center;
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    margin: 0;
+}
+
+.container {
+    padding: 1em;
+    border: 1px solid var(--clr-border);
+}
+
+.infobox {
+    margin-top: 3em;
+    margin-bottom: 1em;
+    font-size: 1rem;
+}
+
+h1 {
+    margin-top: 2rem;
+    font-size: 5rem;
+}
+
+#episodeInfo {
+    margin: 1em 0em;
+}
+
+#episodeContent {
+    font-size: 3rem;
+    margin: 0;
+}
+
+#episodeImage {
+    width: 750px;
+    max-width: 80%;
+    margin-bottom: 2em;
+}
+
+a {
+    color: var(--clr-white);
+    text-decoration: underline;
+}
+
+p {
+    font-size: 1.4rem;
+    margin-bottom: 1em;
+}
+
+.refresh-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5em 1em;
+    font-size: 1.2rem;
+    color: var(--clr-background);
+    background: var(--clr-white);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.refresh-button:hover,
+.refresh-button:active {
+    background-color: var(--clr-red);
+}
+
+.refresh-button img {
+    margin-right: -0.2em;
+    width: auto;
+    /* Ensure width is auto for responsive design */
+    height: 30px;
+    /* Specify the height of the SVG */
+}
+
+footer {
+    font-family: RobotoCondensed, Arial, sans-serif;
+    font-size: 0.8rem;
+    max-width: 100%;
+    background-color: var(--clr-background);
+    color: var(--clr-white);
+    padding: 1em;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+@media only screen and (max-width: 600px) {
+
+
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 3rem;
+    }
+
+    #episodeContent {
+        font-size: 1.5rem;
+    }
+
+    #episodeInfo {
+        margin-top: 2em;
+    }
+
+    #episodeImage {
+        max-width: 100%;
+    }
+
+    .infobox {
+        font-size: 0.9rem;
+    }
+
+    .refresh-button {
+        font-size: 1rem;
+        padding: 0.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+
+    .refresh-button img {
+        width: auto;
+        /* Ensure width is auto for responsive design */
+        height: 20px;
+        /* Adjust height for mobile view */
+    }
+
+    footer {
+        font-size: 0.6rem;
+        padding: 0.5rem;
+    }
+}
